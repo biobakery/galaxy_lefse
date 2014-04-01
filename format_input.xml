@@ -1,0 +1,102 @@
+<tool id="LEfSe_for" name="A) Format Data for LEfSe" version="1.0">
+  <code file="format_input_selector.py"/> 
+	<description></description>
+<!-- <command interpreter="python">./format_input.py $inp_data $formatted_input -f $feat_dir -c $cls_n -s $subcls_n -u $subj_n -o 1000000.0 </command>   -->
+<command interpreter="python">format_input.py $inp_data $formatted_input -f $cond.feat_dir -c $cond.cls_n -s $cond.subcls_n -u $cond.subj_n -o $norm </command> 
+  <inputs>
+    <page>
+	<param format="tabular" name="inp_data" type="data" label="Select data (tabular format)" help=""/>
+	<param name="cond" type="data_column" data_ref="inp_data" accept_default="true" /> 
+
+	<conditional name="cond" type="data_column" data_ref="inp_data" accept_default="true">
+        <param name="feat_dir" type="select" data_ref="inp_data" label="Select whether the vectors (features and meta-data information) are listed in rows or columns" help="">
+          <option value="r" selected='True'>Rows</option>
+          <option value="c">Columns</option>
+        </param>
+
+        <when value="r">
+                <param name="cls_n" label="Select which row to use as class" size ="70" type='select' dynamic_options="get_cols(inp_data,'r','cl')" />
+                <param name="subcls_n" label="Select which row to use as subclass" type='select' dynamic_options="get_cols(inp_data,'r','subclass')" />
+                <param name="subj_n" label="Select which row to use as subject" type='select' dynamic_options="get_cols(inp_data,'r','subject')" />
+        </when>
+        <when value="c">
+                <param name="cls_n" label="Select which column to use as class" type='select' dynamic_options="get_cols(inp_data,'c','cl')" />
+                <param name="subcls_n" label="Select which column to use as subclass" type='select' dynamic_options="get_cols(inp_data,'c','subclass')" />
+                <param name="subj_n" label="Select which column to use as subject" type='select' dynamic_options="get_cols(inp_data,'c','subject')" />
+        </when>
+
+        </conditional>
+
+	<param name="norm" type="select" label="Per-sample normalization of the sum of the values to 1M (recommended when very low values are present)" help="">
+          <option value="1000000.0" selected='True'>Yes</option>
+          <option value="-1">No</option>
+        </param>
+
+<!--	<param name="row" label="on row" type="data_row" data_ref="inp_data" accept_default="true" /> -->
+    </page>
+   </inputs>
+  <outputs>
+    <data format="lefse" name="formatted_input" />
+  </outputs>
+<help>
+**What it does**
+
+Preprocessing module for the biomarker discovery tool called LEfSe:
+
+This module of LEfSe preprocesses metagenomic abundance data for the analyses to be carried out with the "Run LEfSe" module. This module is separated from the "Run LEfSe" because one may want to preprocess the data only once but run multiple analyses.
+
+For an overview of LEfSe please refer to the "Introduction" module or to `(Segata et. al 2011)`_.
+
+------
+
+**Input format**
+
+The module accepts tabular data with the feature list in rows or columns.
+
+------
+
+**Output format**
+
+The module generates data readable by the "Run LEfSe" module only. 
+
+------
+
+**Parameters**
+
+The class vector represents the labels of the main condition under investigation. The (optional) subclass vector denotes the internal groupings with biological meaning inside each class (subclasses of different classes with the same name are processed as different subclasses). The subject vector (optional) reports a third dimension denoting meta-data (subject id, sample type, ... ) which is independent from the class and subclass definition. 
+
+The labels can have a hierarchical organization (see example below) reflecting taxonomies (like NCBI or RDB microbial taxonomy, SEED subsystems or GO terms). The taxonomic levels are specified using the character \|.
+
+The per-sample normalization is usually applied for metagenomic data in which the relative abundances are taken into account. 
+
+------
+
+**Example**
+
+Although both column and row feature organization is accepted, given the high-dimensional nature of metagenomic data, the listing of the features in rows is preferred. A partial example of an input file follows (all values are separated by single-tab)::
+
+	bodysite				mucosal		mucosal		mucosal		mucosal		mucosal		non_mucosal	non_mucosal	non_mucosal	non_mucosal	non_mucosal
+	subsite					oral		gut		oral		oral		gut		skin		nasal		skin		ear		nasal
+	id					1023		1023		1672		1876		1672		159005010	1023		1023		1023		1672
+	Bacteria				0.99999		0.99999		0.999993	0.999989	0.999997	0.999927	0.999977	0.999987	0.999997	0.999993
+	Bacteria|Actinobacteria			0.311037	0.000864363	0.00446132	0.0312045	0.000773642	0.359354	0.761108	0.603002	0.95913		0.753688
+	Bacteria|Bacteroidetes			0.0689602	0.804293	0.00983343	0.0303561	0.859838	0.0195298	0.0212741	0.145729	0.0115617	0.0114511
+	Bacteria|Firmicutes			0.494223	0.173411	0.715345	0.813046	0.124552	0.177961	0.189178	0.188964	0.0226835	0.192665
+	Bacteria|Proteobacteria			0.0914284	0.0180378	0.265664	0.109549	0.00941215	0.430869	0.0225884	0.0532684	0.00512034	0.0365453
+	Bacteria|Firmicutes|Clostridia		0.090041	0.170246	0.00483188	0.0465328	0.122702	0.0402301	0.0460614	0.135201	0.0115835	0.0537381
+
+In this case one may want to use bodysite as class, subsite as subclass and id as subject. Notice that the features have a hierarchical structure specified using the character \|.
+
+**Example with the "mouse model dataset"**
+
+You can try the LEfSe modules using the dataset available here_. This is a 16S dataset from `(Garrett et. al 2010)`_ and `(Veiga et. al 2010)`_ for studying the characteristics of the fecal microbiota in a mouse model of spontaneous colitis. The dataset contains 30 abundance profiles (obtained processing the 16S reads with RDP) belonging to 10 rag2 (control) and 20 truc (case) mice. The metadata consists of class information only, as we don't have subject or subclass information. The dataset contains the features organized in rows; you need to select the first row as class, whereas you have to select "no subclass" and "no subject" options.
+        
+    
+.. _here: http://www.huttenhower.org/webfm_send/73
+.. _(Segata et. al 2011): http://www.ncbi.nlm.nih.gov/pubmed/21702898
+.. _(Garrett et. al 2010): http://www.ncbi.nlm.nih.gov/pubmed/20833380
+.. _(Veiga et. al 2010): http://www.ncbi.nlm.nih.gov/pubmed/20921388
+.. _contact us: nsegata@hsph.harvard.edu
+
+</help>
+</tool>

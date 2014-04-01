@@ -1,0 +1,156 @@
+<tool id="LEfSe_res" name="C) Plot LEfSe Results" version="1.0">
+  <description></description>
+<command interpreter="python">./plot_res.py $inp_data $res --title "$textm.title" --subclades $textm.subclades --title_font_size $textm.title_font_size --max_feature_len $textm.max_f_len --feature_font_size $textm.feature_font_size --class_legend_font_size $textm.class_legend_font_size --width $graphical.width --format $for --dpi $dpi --left_space $graphical.left_space_prop --right_space $graphical.right_space_prop --background_color $graphical.background_color</command> 
+  <inputs>
+    <page>
+	<param format="lefse_res" name="inp_data" type="data" label="Select data" help=""/>
+
+	<conditional name="textm">
+                <param name="text_choice" type="select" label="Set text and label options (font size, abbreviations, ...)" help="">
+                        <option value="d" selected='True'>Default</option>
+                        <option value="a">Advanced</option>
+                </param>
+		<when value="d">
+			<param name="title" type="hidden" value=""/>
+			<param name="title_font_size" type="hidden" value="14"/>
+			<param name="feature_font_size" type="hidden" value="7" />
+		        <param name="class_legend_font_size" type="hidden" value="10" />
+			<param name="subclades" type="hidden" value="1" />
+			<param name="max_f_len" type="hidden" value="60" />
+		</when>
+                <when value="a">
+			<param name="title" type="text" size="10" value="" label="The title of the cladogram"/>
+	        	<param name="subclades" type="integer" size="2" value="1" label="Number of label levels to be displayed (-1 means all)"/>
+	        	<param name="max_f_len" type="integer" size="2" value="60" label="Maximum length of feature names "/>
+			<param name="title_font_size" type="integer" size="2" value="14" label="Title font size"/>
+			<param name="feature_font_size" type="integer" size="2" value="7" label="Label font size"/>
+	        	<param name="class_legend_font_size" type="integer" size="2" value="10" label="Class font size"/>
+		</when>
+	</conditional>
+
+	<conditional name="graphical">
+                <param name="text_choice" type="select" label="Set some graphical options to personalize the output" help="">
+                        <option value="d" selected='True'>Default</option>
+                        <option value="a">Advanced</option>
+                </param>
+                <when value="d">
+			<param name="width" type="hidden" value="7.0" />
+			<param name="left_space_prop" type="hidden"  value="0.2" />
+			<param name="right_space_prop" type="hidden"  value="0.1" />
+			<param name="background_color" type="hidden" value="w"/>
+                </when>
+                <when value="a">
+			<param name="width" type="float" size="2" value="7.0" label="Width of the plot"/>
+			<param name="left_space_prop" type="float" size="2" value="0.2" label="Fraction of the total width to be reserved for the space at the left of the plot "/>
+			<param name="right_space_prop" type="float" size="2" value="0.1" label="Fraction of the total width to be reserved for the space at the right of the plot "/>
+			<param name="background_color" type="select" label="Whether to optimize the colors for a white or black background">
+                                <option value="w" selected='True'>White</option>
+                                <option value="k">Black</option>
+                        </param>
+	
+                </when>
+        </conditional>
+
+
+
+	<param name="for" type="select" label="Output format">
+                <option value="png" selected="png">png</option>
+                <option value="svg">svg</option>
+                <option value="pdf">pdf</option>
+        </param>
+        <param name="dpi" type="select" label="Set the dpi resolution of the output">
+                <option value="72">72</option>
+                <option value="150" selected="True">150</option>
+                <option value="300">300</option>
+                <option value="600">600</option>
+                <option value="1200">1200</option>
+        </param>
+ 
+    </page>
+   </inputs>
+  <outputs>
+    <data format="png" name="res" >
+	<change_format>
+        <when input="for" value="svg" format="svg" />
+      </change_format>
+   </data>
+  </outputs>
+  <tests>
+    <test>
+      <param name="input1" value="13.bed" dbkey="hg18" ftype="bed"/>
+      <param name="maf_source" value="cached"/>
+      <param name="maf_identifier" value="17_WAY_MULTIZ_hg18"/>
+      <param name="species" value="hg18,mm8"/>
+      <param name="overwrite_with_gaps" value="True"/>
+      <output name="out_file1" file="interval_maf_to_merged_fasta_out3.fasta" />
+    </test>
+    <test>
+      <param name="input1" value="1.bed" dbkey="hg17" ftype="bed"/>
+      <param name="maf_source" value="cached"/>
+      <param name="maf_identifier" value="8_WAY_MULTIZ_hg17"/>
+      <param name="species" value="canFam1,hg17,mm5,panTro1,rn3"/>
+      <param name="overwrite_with_gaps" value="True"/>
+      <output name="out_file1" file="interval_maf_to_merged_fasta_out.dat" />
+    </test>
+    <test>
+      <param name="input1" value="1.bed" dbkey="hg17" ftype="bed"/>
+      <param name="maf_source" value="user"/>
+      <param name="maf_file" value="5.maf"/>
+      <param name="species" value="canFam1,hg17,mm5,panTro1,rn3"/>
+      <param name="overwrite_with_gaps" value="True"/>
+      <output name="out_file1" file="interval_maf_to_merged_fasta_user_out.dat" />
+    </test>
+  </tests>
+  <help>
+**What it does**
+
+This module plots the biomarkers found by LEfSe ranking them accordingly to their effect size and associating them with the class with the highest median. 
+
+------
+
+**Input format**
+
+The module accepts the output of the LEfSe module (B) only.
+
+------
+
+**Output format**
+
+The module generate images in png, svg or pdf format. The png format is recommended for exploratory runs as it can be easily visualized internally in Galaxy, whereas the vectorial svg and pdf formats are recommended for the final publication-ready image to be downloaded.
+
+------
+
+**Parameters**
+
+In addition to the output format and the dpi resolution two sets of parameters can be tuned: text and label options for regulating the plot annotation and graphical options for personalizing the appearance of the plot. The default settings of the parameters should give satisfactory outputs in the great majority of the cases.
+
+**Advanced parameter settings**
+
+*Text and label options*
+	* The title of the cladogram: optional title for the plot (default is no title).
+	* Number of label levels to be displayed: when dealing with hierarchical features this option sets the level to be displayed in the labels (-1 means the last level only, 1 means the highest level, 2 means the first two levels and so on).	
+	* Maximum length of feature names: set the length of the feature names above which the names will be abbreviated (in the middle of the string).
+	* Title font size: set the font size of the title only.
+	* Label font size: set the font size of the labels (and of the label legend) used in the cladogram to denote taxa.
+	* Class font size: set the font of the legend for the class names and colors.
+*Graphical options*
+	* Width of the plot: set the inches for the width of the plot (the height is automatically set based on the number of biomarkers to be displayed).
+	* Fraction of the total width to be reserved for the space at the left of the plot: this option permits the user to enlarge the space on the left of the plot for the cases in which the feature labels are long and need more space.
+	* Fraction of the total width to be reserved for the space at the right of the plot: this option permits the user to enlarge the space on the right of the plot for the cases in which the feature labels are long and need more space. 
+	* Whether to optimize the colors for a white or black background: this option permits the user to generate output plots with black backgrounds, adjusting properly the colors of the cladogram.
+
+
+------
+
+**Example**
+
+The dataset provided here_ and described in the "Introduction" module produces the following image (alpha values of LEfSe - step B - are set to 0.01)
+
+.. image:: ../galaxy/static/images/plot_res_ex.png
+.. _here: http://www.huttenhower.org/webfm_send/73  
+
+
+
+
+  </help>
+</tool>

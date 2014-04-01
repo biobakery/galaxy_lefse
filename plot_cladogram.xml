@@ -1,0 +1,211 @@
+<tool id="LEfSe_cla" name="D) Plot Cladogram" version="1.0">
+  <description></description>
+<command interpreter="python">plot_cladogram.py $inp_data $cladogram --title "$textm.title" --expand_void_lev $structural.expand_void_lev --max_lev $structural.max_lev --colored_label $graphical.colored_labels --labeled_start_lev $textm.labeled_start_lev --labeled_stop_lev $textm.labeled_stop_lev --abrv_start_lev $textm.abrv_start_lev --abrv_stop_lev $textm.abrv_stop_lev --radial_start_lev $graphical.radial_start_lev  --max_point_size $graphical.max_point_size  --min_point_size $graphical.min_point_size  --point_edge_width $graphical.point_edge_width  --siblings_connector_width $graphical.siblings_connector_width --parents_connector_width $graphical.parents_connector_width  --alpha $graphical.alpha  --clade_sep $graphical.clade_sep --title_font_size $textm.title_font_size --label_font_size $textm.label_font_size --class_legend_font_size $textm.class_legend_font_size --sub_clade "$structural.root" --background_color $graphical.background_color --format $for --right_space_prop $graphical.right_space_prop --left_space_prop 0.01 --dpi $dpi</command> 
+  <inputs>
+    <page>
+	<param format="lefse_res" name="inp_data" type="data" label="Select data" help=""/>
+		
+	<conditional name="structural">
+		<param name="structural_choice" type="select" label="Set structural parameters of the cladogram" help="">
+          		<option value="d" selected='True'>Default</option>
+          		<option value="a">Advanced</option>
+        	</param>
+		<when value="d">
+			<param name="root" type="hidden"  value=""/>
+			<param name="expand_void_lev" type="hidden"  value="0"/>
+			<param name="max_lev" type="hidden"  value="6"/>
+		</when>
+		<when value="a">
+			<param name="root" type="text" size="10" value="" label="Root of the tree (insert the full name of the clade separating the levels with '.', nothing means the highest level clade)"/>
+			<param name="expand_void_lev" type="select" label="Expand terminal non-leaf levels">
+				<option value="1" >Yes</option>
+        	                <option value="0" selected='True'>No</option>
+	                </param>
+			<param name="max_lev" type="integer" size="2" value="6" label="Maximum number of taxonomic levels"/>
+			</when>
+	</conditional>
+
+	<conditional name="textm">
+        	<param name="text_choice" type="select" label="Set text and label options (font size, abbreviations, ...)" help="">
+        		<option value="d" selected='True'>Default</option>
+          		<option value="a">Advanced</option>
+        	</param>
+        	<when value="d">
+			<param name="title" type="hidden" value=""/>
+			<param name="label_font_size" type="hidden" value="7"/>
+			<param name="title_font_size" type="hidden" value="14" />
+			<param name="class_legend_font_size" type="hidden" value="10"/>
+			<param name="labeled_start_lev" type="hidden" value="2"/>	
+			<param name="labeled_stop_lev" type="hidden" value="6"/>	
+			<param name="abrv_start_lev" type="hidden" value="4"/>
+			<param name="abrv_stop_lev" type="hidden" value="6"/>
+        	</when>
+        	<when value="a">
+			<param name="title" type="text" size="10" value="" label="The title of the cladogram"/>
+			<param name="title_font_size" type="integer" size="2" value="14" label="Title font size"/>
+			<param name="label_font_size" type="integer" size="2" value="7" label="Label font size"/>
+			<param name="class_legend_font_size" type="integer" size="2" value="10" label="Class font size"/>
+			<param name="labeled_start_lev" type="integer" size="2" value="2" label="Starting level for drawing the labels"/>	
+			<param name="labeled_stop_lev" type="integer" size="2" value="6" label="Last level for drawing the labels"/>	
+			<param name="abrv_start_lev" type="integer" size="2" value="4" label="First level for abbreviating the labels"/>
+			<param name="abrv_stop_lev" type="integer" size="2" value="6" label="Last level for abbreviating the labels"/>
+		</when>
+        </conditional>
+
+	<conditional name="graphical">
+        	<param name="graphical_choice" type="select" label="Set some graphical options to personalize the output">
+          		<option value="d" selected='True'>Default</option>
+          		<option value="a">Advanced</option>
+        	</param>
+        	<when value="d">
+ 			<param name="radial_start_lev" type="hidden" value="1" />
+			<param name="max_point_size" type="hidden" value="7.0" />
+			<param name="min_point_size" type="hidden" value="1.5" />
+			<param name="point_edge_width" type="hidden" value="0.25" />
+			<param name="siblings_connector_width" type="hidden" value="2.0" />
+			<param name="parents_connector_width" type="hidden" value="0.8" />
+			<param name="alpha" type="hidden" value="0.2" />
+			<param name="clade_sep" type="hidden" value="1.5" />
+			<param name="for" type="hidden" value="png" />
+			<param name="right_space_prop" type="hidden" value="0.1"/>
+			<param name="colored_labels" type="hidden" value="0"/>
+			<param name="background_color" type="hidden" value="w"/>
+        	</when>
+        	<when value="a">
+			<param name="radial_start_lev" type="integer" size="2" value="1" label="Number of external levels drawn in the radial representation"/>
+			<param name="max_point_size" type="float" size="2" value="7.0" label="Max dimension of the circles representing taxa"/>
+			<param name="min_point_size" type="float" size="2" value="1.5" label="Min dimension of the circles representing taxa"/>
+			<param name="point_edge_width" type="float" size="2" value="0.25" label="Width of the edges of the circles representing taxa"/>
+			<param name="siblings_connector_width" type="float" size="2" value="2.0" label="Width of the lines connecting sibling taxa"/>
+			<param name="parents_connector_width" type="float" size="2" value="0.8" label="Width of the lines connecting parent with son taxa"/>
+			<param name="alpha" type="float" size="2" value="0.2" label="The alpha value for the transparency of clade labeling"/>
+			<param name="right_space_prop" type="float" size="2" value="0.1" label="Ration of the horizontal space to be given to the right side (for adjusting for label legend)"/>
+			<param name="colored_labels" type="select" label="Whether to write the labels with the class color or in black">
+				<option value="0" selected='True'>Black</option>
+	                        <option value="1">Class color</option>
+	                </param>
+			<param name="background_color" type="select" label="Background color">
+                                <option value="w" selected='True'>White</option>
+                                <option value="k">Black</option>
+                        </param>
+			<param name="clade_sep" type="float" size="2" value="1.5" label="Set the space between clades at the lower level"/>
+		</when>
+        </conditional>
+	<param name="for" type="select" label="Output format">
+		<option value="png" selected="png">png</option>
+		<option value="svg">svg</option>
+		<option value="pdf">pdf</option>
+	</param>
+	<param name="dpi" type="select" label="Set the dpi resolution of the output">
+		<option value="72">72</option>
+		<option value="150" selected="True">150</option>
+		<option value="300">300</option>
+		<option value="600">600</option>
+		<option value="1200">1200</option>
+	</param>
+
+    </page>
+   </inputs>
+  <outputs>
+    <data format="png" name="cladogram" >
+	<change_format>
+	<when input="for" value="svg" format="svg" />
+	<when input="for" value="pdf" format="pdf" />
+	</change_format>
+     </data>
+  </outputs>
+  <tests>
+    <test>
+      <param name="input1" value="13.bed" dbkey="hg18" ftype="bed"/>
+      <param name="maf_source" value="cached"/>
+      <param name="maf_identifier" value="17_WAY_MULTIZ_hg18"/>
+      <param name="species" value="hg18,mm8"/>
+      <param name="overwrite_with_gaps" value="True"/>
+      <output name="out_file1" file="interval_maf_to_merged_fasta_out3.fasta" />
+    </test>
+    <test>
+      <param name="input1" value="1.bed" dbkey="hg17" ftype="bed"/>
+      <param name="maf_source" value="cached"/>
+      <param name="maf_identifier" value="8_WAY_MULTIZ_hg17"/>
+      <param name="species" value="canFam1,hg17,mm5,panTro1,rn3"/>
+      <param name="overwrite_with_gaps" value="True"/>
+      <output name="out_file1" file="interval_maf_to_merged_fasta_out.dat" />
+    </test>
+    <test>
+      <param name="input1" value="1.bed" dbkey="hg17" ftype="bed"/>
+      <param name="maf_source" value="user"/>
+      <param name="maf_file" value="5.maf"/>
+      <param name="species" value="canFam1,hg17,mm5,panTro1,rn3"/>
+      <param name="overwrite_with_gaps" value="True"/>
+      <output name="out_file1" file="interval_maf_to_merged_fasta_user_out.dat" />
+    </test>
+  </tests>
+  <help>
+**What it does**
+
+This module produces cladograms representing the LEfSe results (obtained with the corresponding module) on the hierarchy induced by the label names (the levels of the tree must be denoted with "|" in the original input file). The module cannot be used for features that do not have a tree structure.
+
+Below you can find a couple of examples.
+
+------
+
+**Input format**
+
+The module accepts the output of the LEfSe module.
+
+------
+
+**Output format**
+
+The module generate images in png, svg or pdf format. The png format is recommended for exploratory runs as it can be easily visualized internally in Galaxy, whereas the vectorial svg and pdf format are recommended for the final publication-ready image to be downloaded.
+
+------
+
+**Parameters**
+
+In addition to the output format and the dpi resolution three sets of parameters can be tuned: structural parameters affecting the property of the circular cladogram, text and label options for regulating the clade annotation and graphical options for personalizing the appearance of the plot. The default settings of the parameters should give satisfactory cladograms in the great majority of the cases.
+
+**Advanced parameter settings**
+
+*Structural parameters*
+        * Root of the tree: selects any taxa of the tree to be the root of the cladogram (only the clades below the root will be visualized). Taxa levels are separated by ".", so for, example, Bacteria.Firmicutes will generate only the cladogram of Firmicutes.
+        * Expand terminal non-leaf levels: whether to expand a non-leaf taxa without children up to the level of the leaves naming the new levels with the expanding taxa name. 
+        * Maximum number of taxonomic levels: you can limit the levels of the cladogram to a desired level.
+*Text and label options*
+	* The title of the cladogram: optional title for the plot (default is no title).
+	* Title font size: set the font size of the title only.
+	* Label font size: set the font size of the labels (and of the label legend) used in the cladogram to denote taxa.
+	* Class font size: set the font of the legend for the class names and colors.
+	* Starting level for drawing the labels: you can avoid naming the more internal clades if they are not informative.
+	* Last level for drawing the labels: you may want to remove the most external labels as they may be to dense or overlapping.
+	* First level for abbreviating the labels: set the starting level for substituting the full clade names with with an abbreviation supported by a legend table (recommended for the most external taxa).
+	* Last level for abbreviating the labels: set the more external level for substituting the full clade names with with an abbreviation supported by a legend table.
+*Graphical options*
+	* Number of external levels drawn in the radial representation: the connection between the taxa in last level and the corresponding parent is represented with a straight edge. The same representation may be used for more internal levels as well.
+	* Max dimension of the circles representing taxa: the sizes of the taxa represent the highest logarithmic abundance between classes, and this option sets the maximum diameter of the graphical representation.
+	* Min dimension of the circles representing taxa: the taxon diameter of the smallest logarithmic taxa abundance.
+	* Width of the edges of the circles representing taxa: the taxon circles have an external border whose thickness is regulated by this option.
+	* Width of the lines connecting sibling taxa: set the thickness of the lines connecting sibling taxa in the non-radial representation.
+	* Width of the lines connecting parent with son taxa: set the line thickness of the child-parent connection both in radial and non-radial representation.
+	* The alpha value for the transparency of clade labeling: the alpha value is responsible for the transparency of the differential clade highlighting. Since the transparency is additive, the alpha value should not be higher than 1/s where s is the number of levels with differential clades. 
+	* Ration of the horizontal space to be given to the right side: in case the label legend requires more space (because of long labels) you may increase the right panel increasing this value.
+	* Whether to write the labels with the class color or in black: set whether the clade names inside the cladogram will be displayed with the class color or in black.
+	* Background color: whether to generate plots with black or white backgrounds, adjusting properly the other colors.
+	* Set the space between clades at the lower level: set the separation between low-level taxa belonging to different super-clades. Depending on the density of the leaf-level this parameter is automatically adjusted.
+
+
+------
+
+**Examples**
+
+The dataset provided here_ and described in the "Introduction" module produces the following image (alpha values of LEfSe - step B - are set to 0.01)
+
+.. image:: ../galaxy/static/images/plot_cladogram_ex.png
+.. _here: http://www.huttenhower.org/webfm_send/73  
+
+Focusing the cladogram on the Firmicutes phylum only and playing a bit with the graphical options, we can obtain the following plot:
+
+.. image:: ../galaxy/static/images/plot_cladogram_ex2.png
+
+  </help>
+</tool>

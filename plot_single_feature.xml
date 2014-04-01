@@ -1,0 +1,153 @@
+<tool id="LEfSe_sfe" name="E) Plot One Feature" version="1.0">
+<code file="format_input_selector.py"/> 
+  <description></description>
+<command interpreter="python">plot_features.py $inp_data $inp_res $arch --title_font_size $graphical.title_font_size --background_color $graphical.background_color --class_label_pos $graphical.class_label_pos --class_font_size $graphical.class_font_size --top $graphical.top --bot $graphical.bot --font_size $graphical.font_size --width $graphical.width --height $graphical.height -f one --feature_num $featd.feat --archive "none" --format $for --dpi $dpi --subcl_mean $graphical.subcl_mean --subcl_median $graphical.subcl_median </command>  
+<inputs>
+	<page>
+	<param format="lefse" name="inp_data" type="data" label="The formatted datasets" help=""/>
+	<param format="lefse_res" name="inp_res" type="data" label="The LEfSe output" help=""/>
+
+	<param name="featd" type="data_column" data_ref="inp_res" value="1" optional="true" force_select="false" accept_default="false" /> 
+
+	<conditional name="featd" type="data_column" data_ref="inp_res" accept_default="true">  
+        <param name="feat_dir" type="select" data_ref="inp_res" label="Select the feature names among biomarkers or all features" help="">
+          <option value="b" selected='True'>Biomarkers only</option>       
+          <option value="a">All features</option>    
+        </param>
+        
+        <when value="b">
+		<param name="feat" label="Select the feature to plot" data_ref="inp_res" type='select' force_select="false" dynamic_options="get_row_names(inp_res,'b')" value="1" optional="true" accept_default="false" />
+        </when>
+        <when value="a">
+		<param name="feat" label="Select the feature to plot" data_ref="inp_res" type='select' force_select="false" dynamic_options="get_row_names(inp_res,'a')" value="1" optional="true" accept_default="false" />
+        </when>
+	</conditional> 
+
+	<conditional name="graphical">
+	<param name="graphical_choice" type="select" label="Set some graphical options to personalize the output">
+                        <option value="d" selected='True'>Default</option>
+                        <option value="a">Advanced</option>
+	</param>
+       	<when value="d">
+		<param name="top" type="hidden" value="-1.0" />
+		<param name="bot" type="hidden" value="0.0" />
+                <param name="title_font_size" type="hidden" value="14" />
+                <param name="class_font_size" type="hidden" value="12" />
+                <param name="font_size" type="hidden" value="8" />
+                <param name="width" type="hidden" value="7.0" />
+                <param name="height" type="hidden" value="4.0" />
+                <param name="background_color" type="hidden" value="w" />
+		<param name="width" type="hidden" value="7.0" />
+                <param name="height" type="hidden" value="4.0" />
+		<param name="class_label_pos" type="hidden" value="up" />
+		<param name="subcl_mean" type="hidden" value="y" />
+		<param name="subcl_median" type="hidden" value="y" />
+	</when>
+
+	<when value="a">
+		<param name="top" type="float" size="2" value="-1.0" label="Set the maximum y value (-1.0 means automatic maximum setting based on maximum class median)"/>
+		<param name="bot" type="float" size="2" value="0.0" label="Set the minimum y value (-1.0 means automatic minimum setting based on minimum class median)"/>
+		<param name="title_font_size" type="integer" size="2" value="14" label="Title font size"/>
+	        <param name="class_font_size" type="integer" size="2" value="12" label="Class names font size"/>
+	        <param name="font_size" type="integer" size="2" value="8" label="Size of subclasses names and y values"/>
+	        <param name="width" type="float" size="2" value="7.0" label="Width of the plot"/>
+	        <param name="height" type="float" size="2" value="4.0" label="Height of the plot"/>
+		<param name="background_color" type="select" label="Background color">
+			<option value="w" selected='True'>White</option>
+                        <option value="k">Black</option>
+                </param>
+		<param name="class_label_pos" type="select" label="Class label position ">
+			<option value="up" selected='True'>Top</option>
+                        <option value="down">Bottom</option>
+                </param>
+		<param name="subcl_mean" type="select" label="Plot subclass means (straight line)">
+                        <option value="y" selected='True'>Yes</option>
+                        <option value="n">No</option>
+                </param>
+		<param name="subcl_median" type="select" label="Plot subclass medians (dotted line)">
+                        <option value="y" selected='True'>Yes</option>
+                        <option value="n">No</option>
+                </param>
+
+        </when>
+
+        </conditional>		
+
+
+    	<param name="for" type="select" label="Output format">
+                <option value="png" selected="png">png</option>
+                <option value="svg">svg</option>
+                <option value="pdf">pdf</option>
+        </param>
+        <param name="dpi" type="select" label="Set the dpi resolution of the output">
+                <option value="72">72</option>
+                <option value="150" selected="True">150</option>
+                <option value="300">300</option>
+                <option value="600">600</option>
+                <option value="1200">1200</option>
+        </param>
+
+	</page>
+</inputs>
+  <outputs>
+    <data format="png" name="arch" >
+	<change_format> 
+	<when input="for" value="svg" format="svg" />
+	</change_format>
+     </data>
+  </outputs>
+  <help>
+**What it does**
+
+This module plots the raw data of a single feature as an abundance histogram with class and subclass information. You can select the feature to plot among the set of features detected by LEfSe as biomarker or among the full set of features.
+
+------
+
+**Input format**
+
+The module accepts two datasets: the data formatted with the "Format Input for
+LEfSe" module and the output of the LEfSe analysis. Both datasets are necessary
+to run the module. 
+
+------
+
+**Output format**
+
+The module generates images in png, svg or pdf format. The png format is recommended for exploratory runs as it can be easily visualized internally in Galaxy, whereas the vectorial svg and pdf format are recommended for the final publication-ready image to be downloaded.
+
+------
+
+**Advanced parameter settings**
+
+*Graphical options*
+	* Set the maximum y value: set the maximum value on the y-axis. -1 means automatic parameter setting that is computed as the minimum between the highest abundance value and three times the highest subclass median.
+	* Set the minimum y value: -1 means automatic parameter setting that is computed as the maximum between 0 and the 90% of the smallest abundance value.
+	* Title font size: set the font size of the title only.
+	* Class font size: set the font of the legend for the class names and colors.
+	* Size of subclasses names and y values: set the fond size for the axis labels.	
+	* Width of the plot: horizontal size (in inches) of the plot.
+	* Height of the plot: vertical size (in inches) of the plot.
+	* Background color: whether to generate plots with black or white backgrounds, adjusting properly the other colors.
+	* Class label position: whether to place the class labels on the top or on the bottom of the plot.
+	* Plot subclass means (straight line): whether to plot the subclass means with straight horizontal lines.
+	* Plot subclass medians (dotted line): whether to plot the subclass medians with dotted horizontal lines.
+
+------
+
+**Examples**
+
+Selecting the Clostridia clade from the biomarkers detected by LEfSe in the dataset provided here_ and described in the "Introduction", we obtain the following image:
+
+.. image:: ../galaxy/static/images/plot_feat.png
+.. _here: http://www.huttenhower.org/webfm_send/73  
+
+Another example, taken from the analysis we detailed in `(Segata et. al 2011)`_ that compares the viral and bacterial microbiomes using metagenomic data from `(Dinsdale et. al 2008)`_:
+
+.. image:: ../galaxy/static/images/plot_feat_2.png
+
+
+.. _(Segata et. al 2011): http://www.ncbi.nlm.nih.gov/pubmed/21702898
+.. _(Dinsdale et. al 2008): http://www.ncbi.nlm.nih.gov/pubmed/18337718
+
+  </help>
+</tool>

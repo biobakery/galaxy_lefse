@@ -1,0 +1,101 @@
+<tool id="LEfSe_run" name="B) LDA Effect Size (LEfSe)" version="1.0">
+  <description></description>
+<!-- <command interpreter="python">./run_lefse.py $inp_data $output -l $lda_th -a $kw_alpha -w $w_alpha -e $w_pol -s $mtc -y $multiclass </command>  -->
+<command interpreter="python">run_lefse.py $inp_data $output -l $lda_th -a $kw_alpha -w $w_alpha -e $w_pol -y $multiclass -f 0.9</command> 
+  <inputs>
+    <page>
+	<param format="lefse" name="inp_data" type="data" label="Select data" help=""/>
+	<param name="kw_alpha" type="float" size="2" value="0.05" label="Alpha value for the factorial Kruskal-Wallis test among classes"/>
+	<param name="w_alpha" type="float" size="2" value="0.05" label="Alpha value for the pairwise Wilcoxon test between subclasses"/>
+	<param name="lda_th" type="float" size="2" value="2.0" label="Threshold on the logarithmic LDA score for discriminative features"/>
+	<param name="w_pol" type="select" label="Do you want the pairwise comparisons among subclasses to be performed only among the subclasses with the same name?" help="">
+          <option value="0" selected="0">No</option>
+          <option value="1">Yes</option>
+        </param>	
+<!--	<param name="mtc" type="select" label="Set the multiple testing correction (no correction recommended) (to check the parameter passing here)" help="">
+          <option value="0" selected="0">No correction</option>
+          <option value="1">Correction for independent comparisons</option>
+          <option value="2">Correction for dependent comparisons</option>
+        </param>	-->
+	<param name="multiclass" type="select" label="Set the strategy for multi-class analysis" help="">
+          <option value="1" selected="True">All-against-all (more strict)</option>
+          <option value="0">One-against-all (less strict)</option>
+        </param>
+    </page>
+   </inputs>
+  <outputs>
+    <data format="lefse_res" name="output" />
+  </outputs>
+  <tests>
+    <test>
+      <param name="input1" value="13.bed" dbkey="hg18" ftype="bed"/>
+      <param name="maf_source" value="cached"/>
+      <param name="maf_identifier" value="17_WAY_MULTIZ_hg18"/>
+      <param name="species" value="hg18,mm8"/>
+      <param name="overwrite_with_gaps" value="True"/>
+      <output name="out_file1" file="interval_maf_to_merged_fasta_out3.fasta" />
+    </test>
+    <test>
+      <param name="input1" value="1.bed" dbkey="hg17" ftype="bed"/>
+      <param name="maf_source" value="cached"/>
+      <param name="maf_identifier" value="8_WAY_MULTIZ_hg17"/>
+      <param name="species" value="canFam1,hg17,mm5,panTro1,rn3"/>
+      <param name="overwrite_with_gaps" value="True"/>
+      <output name="out_file1" file="interval_maf_to_merged_fasta_out.dat" />
+    </test>
+    <test>
+      <param name="input1" value="1.bed" dbkey="hg17" ftype="bed"/>
+      <param name="maf_source" value="user"/>
+      <param name="maf_file" value="5.maf"/>
+      <param name="species" value="canFam1,hg17,mm5,panTro1,rn3"/>
+      <param name="overwrite_with_gaps" value="True"/>
+      <output name="out_file1" file="interval_maf_to_merged_fasta_user_out.dat" />
+    </test>
+  </tests>
+  <help>
+**What it does**
+
+Lda Effective Size (LEfSe) is a biomarker discovery and explanation tool for high-dimensional data. It couples statistical significance with biological consistency and effect size estimation. For an overview of LEfSe please refer to the "Introduction" module or to `(Segata et. al 2011)`_.
+
+The scheme and the description below illustrates how the algorithm works:
+
+.. image:: ../galaxy/static/images/lefse_met.png
+
+Input data consist of a collection of m samples (columns) each made up of n numerical features (rows, typically normalized per-sample, red representing high values and green low). These samples are labeled with a class (taking two or more possible values) that represents the main biological hypothesis under investigation; they may also have one or more subclass labels reflecting within-class groupings. 
+
+- Step 1: the Kruskall-Wallis test analyzes all features, testing whether the values in different classes are differentially distributed. Features violating the null hypothesis are further analyzed in Step 2.
+
+- Step 2: the pairwise Wilcoxon test checks whether all pairwise comparisons between subclasses within different classes significantly agree with the class level trend. 
+
+- Step 3: the resulting subset of vectors is used to build a Linear Discriminant Analysis model from which the relative difference among classes is used to rank the features. The final output thus consists of a list of features that are discriminative with respect to the classes, consistent with the subclass grouping within classes, and ranked according to the effect size with which they differentiate classes.
+
+**Input format**
+
+The input for this module must be generated with the "Format Input for LEfSe" tool.
+
+------
+
+**Output format**
+
+The output consists of a tabular file listing all the features, the logarithm value of the highest mean among all the classes, and if the feature is discriminative, the class with the highest mean and the logarithmic LDA score.
+
+The output file can be conveniently visualized with the "Plot LEfSe Results" module and, if feature names define a hierarchy, with the "Plot Cladogram" module. The output can also be used for generating the histograms of the raw data of the discriminative features using the "Plot Differential Features" module.
+
+------
+
+**Parameters**
+
+The input parameters are the alpha-values for the factorial Kruskal-Wallis test and for the pairwise Wilcoxon test among subclasses (steps 1 and 2 in the schematic picture above) and the non-negative threshold for the logarithmic LDA score. Moreover, the user can decide the pairwise Wilcoxon test to be applied only among subclasses in different classes with the same name (less stringent) and select the multi-class strategy to be the All-against-all (more stringent) or the One-against-all (less stringent).
+
+.. _here: http://www.huttenhower.org/webfm_send/73
+.. _(Segata et. al 2011): http://www.ncbi.nlm.nih.gov/pubmed/21702898
+.. _(Garrett et. al 2010): http://www.ncbi.nlm.nih.gov/pubmed/20833380
+.. _(Veiga et. al 2010): http://www.ncbi.nlm.nih.gov/pubmed/20921388
+.. _contact us: nsegata@hsph.harvard.edu
+
+**Example**
+
+For the mouse model dataset (see the "Introduction" module) it is suggested to use alpha=0.01 as the sample size is not very large.
+
+  </help>
+</tool>

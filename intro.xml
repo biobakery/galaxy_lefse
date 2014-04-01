@@ -1,0 +1,118 @@
+<?xml version="1.0"?>
+
+<tool name="Load data" id="lefse_upload" version="1.1.0">
+  <description>
+    LEfSe starts here  
+  </description>
+  <action module="galaxy.tools.actions.upload" class="UploadToolAction"/>
+  <command interpreter="python">
+      upload.py $GALAXY_ROOT_DIR $GALAXY_DATATYPES_CONF_FILE $paramfile
+    #set $outnum = 0
+    #while $varExists('output%i' % $outnum):
+        #set $output = $getVar('output%i' % $outnum)
+        #set $outnum += 1
+        #set $file_name = $output.file_name
+        ## FIXME: This is not future-proof for other uses of external_filename (other than for use by the library upload's "link data" feature)
+        #if $output.dataset.dataset.external_filename:
+            #set $file_name = "None"
+        #end if
+        ${output.dataset.dataset.id}:${output.files_path}:${file_name}
+    #end while
+  </command>
+  <inputs nginx_upload="true">
+    <param name="file_type" type="hidden" label="File Format" value="tabular" />
+    <param name="async_datasets" type="hidden" value="None"/>
+    <upload_dataset name="files" title="Specify Files for Dataset" file_type_name="file_type" metadata_ref="files_metadata">
+        <param name="file_data" type="file" size="30" label="Upload a tabular file of relative abundances and class labels (possibly also subclass and subjects labels) for LEfSe (spaces in the file are automatically converted to tabs!)" ajax-upload="true" help="TIP: you can find a file to upload at https://bitbucket.org/nsegata/lefse/wiki/ex.txt (described below)">
+        <validator type="expression" message="You will need to reselect the file you specified (%s)." substitute_value_in_message="True">not ( ( isinstance( value, unicode ) or isinstance( value, str ) ) and value != "" )</validator> <!-- use validator to post message to user about needing to reselect the file, since most browsers won't accept the value attribute for file inputs -->
+      </param>
+      <param name="url_paste" type="text" area="true" size="5x35" label="URL/Text" help="Here you may specify a list of URLs (one per line) or paste the contents of a file."/> 
+      <param name="ftp_files" type="ftpfile" label="Files uploaded via FTP"/>
+      <param name="space_to_tab" type="hidden" display="checkboxes" value="Yes" multiple="True" /> 
+    </upload_dataset>
+    <conditional name="files_metadata" title="Specify metadata" value_from="self:app.datatypes_registry.get_upload_metadata_params" value_ref="file_type" value_ref_in_group="False" />
+    <!-- <param name="other_dbkey" type="text" label="Or user-defined Genome" /> -->
+  </inputs>
+  <help>
+ 
+**What it does**
+
+LDA Effect Size (LEfSe) `(Segata et. al 2010)`_ is an algorithm for high-dimensional biomarker discovery and 
+explanation that identifies genomic features (genes, pathways, or taxa) characterizing 
+the differences between two or more biological conditions (or classes, see figure below). It 
+emphasizes both statistical significance and biological relevance, allowing 
+researchers to identify differentially abundant features that are also consistent with 
+biologically meaningful categories (subclasses). LEfSe first robustly 
+identifies features that are statistically different among biological classes. It then 
+performs additional tests to assess whether these differences are consistent with 
+respect to expected biological behavior. 
+
+Specifically, we first use the non-parametric factorial 
+Kruskal-Wallis (KW) sum-rank test to detect features with 
+significant differential abundance with respect to the class of interest; biological 
+significance is subsequently investigated using a set of pairwise tests among 
+subclasses using the (unpaired) Wilcoxon rank-sum test. As a last step, LEfSe uses 
+Linear Discriminant Analysis to estimate the effect size of each differentially 
+abundant feature and, if desired by the investigator, to perform dimension reduction.
+
+LEfSe consists of six modules performing the following steps (see the figure below).
+
+
++ **A) Format Data for LEfSe**: selects the structure of the problem (classes, subclasses, subjects) and formats the tabular abundance data for the B module
++ **B) LDA Effect Size (LEfSe)**: performs the analysis using the data formatted with module A and provides input for the visualization modules (C, D, E, F)
++ **C) Plot LEfSe Results**: graphically reports the discovered biomarkes (output of B) with their effect sizes
++ **D) Plot Cladogram**: graphically represents the discovered biomarkers (output of B) in a taxonomic tree specified by the hierarchical feature names (not available for non-hierarchical features)
++ **E) Plot One Feature**: plots the row values of a feature (biomarker or not) as an abundance histogram with classes and subclasses structure (only one feature at the time)
++ **F) Plot Differential Features**: plots the row values of all features (biomarkers or not) as abundance histograms with classes and subclasses structure and provides a zip archive of the figures
+
+.. image:: ../galaxy/static/images/lefse_ove.png
+
+------
+
+**Input file format**
+
+The text tab-delimited input file consists of a list of numerical features, the class vector and optionally the subclass and subject vectors. The features can be read counts directly or abundance floating-point values more generally, and the first field is the name of the feature. Class, subclass and subject vectors have a name (the first field) and a list of non-numerical strings.
+
+Although both column and row feature organization is accepted, given the high-dimensional nature of metagenomic data, the listing of the features in rows is preferred. A partial example of an input file follows (all values are separated by single-tab)::
+
+	bodysite				mucosal		mucosal		mucosal		mucosal		mucosal		non_mucosal	non_mucosal	non_mucosal	non_mucosal	non_mucosal
+	subsite					oral		gut		oral		oral		gut		skin		nasal		skin		ear		nasal
+	id					1023		1023		1672		1876		1672		159005010	1023		1023		1023		1672
+	Bacteria				0.99999		0.99999		0.999993	0.999989	0.999997	0.999927	0.999977	0.999987	0.999997	0.999993
+	Bacteria|Actinobacteria			0.311037	0.000864363	0.00446132	0.0312045	0.000773642	0.359354	0.761108	0.603002	0.95913		0.753688
+	Bacteria|Bacteroidetes			0.0689602	0.804293	0.00983343	0.0303561	0.859838	0.0195298	0.0212741	0.145729	0.0115617	0.0114511
+	Bacteria|Firmicutes			0.494223	0.173411	0.715345	0.813046	0.124552	0.177961	0.189178	0.188964	0.0226835	0.192665
+	Bacteria|Proteobacteria			0.0914284	0.0180378	0.265664	0.109549	0.00941215	0.430869	0.0225884	0.0532684	0.00512034	0.0365453
+	Bacteria|Firmicutes|Clostridia		0.090041	0.170246	0.00483188	0.0465328	0.122702	0.0402301	0.0460614	0.135201	0.0115835	0.0537381
+
+In this case one may want to use bodysite as class, subsite as subclass and id as subject. Notice that the features have a hierarchical structure specified using the character \|.
+
+
+**Input file sample**
+
+You can try the LEfSe modules using the dataset available here_. This is a 16S dataset from `(Garrett et. al 2010)`_ and `(Veiga et. al 2010)`_ for studying the characteristics of the fecal microbiota in a mouse model of spontaneous colitis. The dataset contains 30 abundance profiles (obtained processing the 16S reads with RDP) belonging to 10 rag2 (control) and 20 truc (case) mice. The metadata consists in class information only, as we don't have subject or subclass information. The same dataset is used to show the graphical results in the module descriptions.
+
+------
+
+**How to Cite LEfSe**
+
+If you find LEfSe usefull in your research please city our paper `(Segata et. al 2010)`_:
+
+| `Nicola Segata`_, Jacques Izard, Levi Walron, Dirk Gevers, Larisa Miropolsky, Wendy Garrett, `Curtis Huttenhower`_.
+| "`Metagenomic Biomarker Discovery and Explanation`_" 
+| Genome Biology, 2011 Jun 24;12(6):R60
+
+
+Please do not hesitate to `contact us`_ for any questions of comments. 
+
+.. _here: http://www.huttenhower.org/webfm_send/73
+.. _(Segata et. al 2010): http://www.ncbi.nlm.nih.gov/pubmed/21702898
+.. _(Garrett et. al 2010): http://www.ncbi.nlm.nih.gov/pubmed/20833380
+.. _(Veiga et. al 2010): http://www.ncbi.nlm.nih.gov/pubmed/20921388
+.. _contact us: nsegata@hsph.harvard.edu
+.. _Nicola Segata: nsegata@hsph.harvard.edu
+.. _Curtis Huttenhower: chuttenh@hsph.harvard.edu
+.. _Metagenomic Biomarker Discovery and Explanation: http://genomebiology.com/2011/12/6/R60 
+
+  </help>
+</tool>
