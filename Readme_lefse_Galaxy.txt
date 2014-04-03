@@ -10,7 +10,6 @@ These instructions require the Mercurial versioning system, galaxy, and an inter
 3. Update member tool_conf.xml  in the galaxy directory adding the following: 
 
   <section name="LEfSe" id="lefse">
-   <tool file="lefse/intro.xml"/>
    <tool file="lefse/format_input.xml" />
    <tool file="lefse/run_lefse.xml" />
    <tool file="lefse/plot_res.xml" />

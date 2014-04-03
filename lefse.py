@@ -36,18 +36,13 @@ def save_res(res,filename):
 			out.write( "\t" + res['wilcox_res'][k]+"\n")
 
 def load_data(input_file, nnorm = False):
-	print "In the load_data subroutine"
-	import pdb
-	pdb.set_trace()
+ 
 	with open(input_file, 'rb') as inputf:
 		inp = pickle.load(inputf)
 	if nnorm: return inp['feats'],inp['cls'],inp['class_sl'],inp['subclass_sl'],inp['class_hierarchy'],inp['norm']  
 	else: return inp['feats'],inp['cls'],inp['class_sl'],inp['subclass_sl'],inp['class_hierarchy']
 
 def load_res(input_file):
-	print "In the load res subroutine"
-	import pdb
-	pdb.set_trace()
 	with open(input_file, 'rb') as inputf:	
 		inp = pickle.load(inputf)
 	return inp['res'],inp['params'],inp['class_sl'],inp['subclass_sl']		

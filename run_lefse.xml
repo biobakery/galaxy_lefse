@@ -59,7 +59,7 @@ Lda Effective Size (LEfSe) is a biomarker discovery and explanation tool for hig
 
 The scheme and the description below illustrates how the algorithm works:
 
-.. image:: ../galaxy/static/images/lefse_met.png
+.. image:: ${static_path}/static/images/lefse_met.png
 
 Input data consist of a collection of m samples (columns) each made up of n numerical features (rows, typically normalized per-sample, red representing high values and green low). These samples are labeled with a class (taking two or more possible values) that represents the main biological hypothesis under investigation; they may also have one or more subclass labels reflecting within-class groupings. 
 

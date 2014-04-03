@@ -200,12 +200,12 @@ In addition to the output format and the dpi resolution three sets of parameters
 
 The dataset provided here_ and described in the "Introduction" module produces the following image (alpha values of LEfSe - step B - are set to 0.01)
 
-.. image:: ../galaxy/static/images/plot_cladogram_ex.png
+
 .. _here: http://www.huttenhower.org/webfm_send/73  
 
 Focusing the cladogram on the Firmicutes phylum only and playing a bit with the graphical options, we can obtain the following plot:
 
-.. image:: ../galaxy/static/images/plot_cladogram_ex2.png
+ 
 
   </help>
 </tool>
