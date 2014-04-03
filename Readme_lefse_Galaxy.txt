@@ -23,5 +23,7 @@ These instructions require the Mercurial versioning system, galaxy, and an inter
 	<datatype extension="lefse" type="galaxy.datatypes.data:Lefse" display_in_upload="true"/>
     <datatype extension="lefse_res" type="galaxy.datatypes.tabular:LefseRes" display_in_upload="true"/>
 
-5. Recycle galaxy
+5. Copy the *.png members to galaxy-dist/static/images
+
+6. Recycle galaxy
 
