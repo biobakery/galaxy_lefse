@@ -5,7 +5,7 @@ These instructions require the Mercurial versioning system, galaxy, and an inter
 
 		bitbucket.org/biobakery/lefse_galaxy
 
-2.  Rename the lefse_galaxy  directory thus created to "lefse"
+2.  Rename the galaxy_lefse  directory thus created to "lefse"
 	
 3. Update member tool_conf.xml  in the galaxy directory adding the following: 
 
