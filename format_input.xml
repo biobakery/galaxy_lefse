@@ -75,8 +75,7 @@ The next steps are:
 + **E) Plot One Feature**: plots the row values of a feature (biomarker or not) as an abundance histogram with classes and subclasses structure (only one feature at the time)
 + **F) Plot Differential Features**: plots the row values of all features (biomarkers or not) as abundance histograms with classes and subclasses structure and provides a zip archive of the figures
 
-.. image:: ${static_path}/images/lefse_ove.png
-
+.. image:: ../galaxy/static/images/lefse_ove.png
 
 ------
 
