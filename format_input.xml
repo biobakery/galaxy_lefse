@@ -38,6 +38,22 @@
   <outputs>
     <data format="lefse" name="formatted_input" />
   </outputs>
+  
+  <tests>
+    <test>
+      <param name="inp_data" value="lefse_input"  ftype="tabular"  />
+      <param name="cond.feat_dir" value="r" />
+	  <param name="cond.cls_n" value="1"  />
+	  <param name="cond.subcls" value="-1"  />
+	  <param name="cond.subj" value="-1"  />
+	  <param name="norm" value="1000000"  />
+      <output name="formatted_input" file="lefse_output_a"  />
+    </test>
+  </tests>   
+ 
+  
+  
+  
 <help>
 	
 	

@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<datatypes>
+    <registration>
+    <datatype extension="lefse" type="galaxy.datatypes.data:Lefse" display_in_upload="true"/>
+    <datatype extension="lefse_res" type="galaxy.datatypes.tabular:LefseRes" display_in_upload="true"/>
+    </registration>
+</datatypes>

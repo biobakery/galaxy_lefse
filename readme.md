@@ -4,35 +4,50 @@ For general information about lefse please go to:
 ```
 https://bitbucket.org/biobakery/biobakery/wiki/lefse
 ```
+Installation instructions for lefse in a galaxy environment.
 
 
 
-In the  "galaxy-dist/tools" directory install lefse by cloning the repository: 
+lefse is installed in Galaxy using the Admin tool of Galaxy.
+
+
+
+In the 
 
 ```
-		bitbucket.org/biobakery/lefse_galaxy
+
+Admin tool
+
+```
+
+select 
+
+```
+
+Search and browse tool sheds
+
+```
+
+select the tool shed and enter
+
+```
+
+lefse
+
+```
+
+select
+
+```
+
+preview and install
+
 ```
 
 
-Rename the galaxy_lefse  directory thus created to "lefse"
-	
-Update member tool_conf.xml  in the galaxy directory adding the following: 
-```
-  <section name="LEfSe" id="lefse">
-   <tool file="lefse/format_input.xml" />
-   <tool file="lefse/run_lefse.xml" />
-   <tool file="lefse/plot_res.xml" />
-   <tool file="lefse/plot_cladogram.xml" />
-   <tool file="lefse/plot_single_feature.xml" />
-   <tool file="lefse/plot_features.xml" />
-  </section>
-```
 
-   Update member datatypes_conf.xml  in the galaxy directory adding the following:
-```
-	<datatype extension="lefse" type="galaxy.datatypes.data:Lefse" display_in_upload="true"/>
-    <datatype extension="lefse_res" type="galaxy.datatypes.tabular:LefseRes" display_in_upload="true"/>
-```
-Recycle galaxy
+NOTE:  You have to be an administrator in your Galaxy instance to install.
+
+
 
 

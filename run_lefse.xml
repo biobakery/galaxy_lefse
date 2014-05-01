@@ -61,7 +61,6 @@ The scheme and the description below illustrates how the algorithm works:
 
 .. image:: https://bytebucket.org/biobakery/galaxy_lefse/wiki/lefse_met.png
 
-
 Input data consist of a collection of m samples (columns) each made up of n numerical features (rows, typically normalized per-sample, red representing high values and green low). These samples are labeled with a class (taking two or more possible values) that represents the main biological hypothesis under investigation; they may also have one or more subclass labels reflecting within-class groupings. 
 
 - Step 1: the Kruskall-Wallis test analyzes all features, testing whether the values in different classes are differentially distributed. Features violating the null hypothesis are further analyzed in Step 2.
@@ -72,7 +71,7 @@ Input data consist of a collection of m samples (columns) each made up of n nume
 
 **Input format**
 
-The input for this module must be generated with the "Format Input for LEfSe" tool.
+The input for this module must be generated with the **"Format Input for LEfSe"** tool.
 
 ------
 
