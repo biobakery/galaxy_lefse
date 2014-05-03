@@ -5,7 +5,7 @@
 <command interpreter="python">format_input.py $inp_data $formatted_input -f $cond.feat_dir -c $cond.cls_n -s $cond.subcls_n -u $cond.subj_n -o $norm </command> 
   <inputs>
     <page>
-	<param format="tabular" name="inp_data" type="data" label="Select data (tabular format)" help=""/>
+	<param format="tabular" name="inp_data" type="data" label="Upload a tabular file of relative abundances and class labels (possibly also subclass and subjects labels) for LEfSe - See samples below - Please use Galaxy Get-Data/Upload-File. Use File-Type = Tabular" help=""/>
 	<param name="cond" type="data_column" data_ref="inp_data" accept_default="true" /> 
 
 	<conditional name="cond" type="data_column" data_ref="inp_data" accept_default="true">
