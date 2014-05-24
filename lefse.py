@@ -36,7 +36,6 @@ def save_res(res,filename):
 			out.write( "\t" + res['wilcox_res'][k]+"\n")
 
 def load_data(input_file, nnorm = False):
- 
 	with open(input_file, 'rb') as inputf:
 		inp = pickle.load(inputf)
 	if nnorm: return inp['feats'],inp['cls'],inp['class_sl'],inp['subclass_sl'],inp['class_hierarchy'],inp['norm']  
@@ -53,10 +52,10 @@ def test_kw_r(cls,feats,p,factors):
 	for i,f in enumerate(factors):
 		robjects.globalenv['x'+str(i+1)] = robjects.FactorVector(robjects.StrVector(cls[f]))
 	fo = "y~x1"
-	for i,f in enumerate(factors[1:]):
-		if f == "subclass" and len(set(cls[f])) <= len(set(cls["class"])): continue
-		if len(set(cls[f])) == len(cls[f]): continue
-		fo += "+x"+str(i+2)
+    #for i,f in enumerate(factors[1:]):
+    #	if f == "subclass" and len(set(cls[f])) <= len(set(cls["class"])): continue
+    #	if len(set(cls[f])) == len(cls[f]): continue
+    #	fo += "+x"+str(i+2)
 	kw_res = robjects.r('kruskal.test('+fo+',)$p.value')
 	return float(tuple(kw_res)[0]) < p, float(tuple(kw_res)[0])
 
@@ -95,7 +94,7 @@ def test_rep_wilcoxon_r(sl,cl_hie,feats,th,multiclass_strat,mul_cor,fn,min_c,com
 					first = False
 					if not curv and ( med_comp or tres ): 
 						dir_cmp = sx < sy
-						if sx == sy: br = True
+                        #if sx == sy: br = True
 					elif curv: 
 						dir_cmp = None
 						if med_comp or tres: 
