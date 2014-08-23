@@ -3,7 +3,7 @@
 <command interpreter="python">./plot_res.py $inp_data $res --title "$textm.title" --subclades $textm.subclades --title_font_size $textm.title_font_size --max_feature_len $textm.max_f_len --feature_font_size $textm.feature_font_size --class_legend_font_size $textm.class_legend_font_size --width $graphical.width --format $for --dpi $dpi --left_space $graphical.left_space_prop --right_space $graphical.right_space_prop --background_color $graphical.background_color</command> 
   <inputs>
     <page>
-	<param format="lefse_res" name="inp_data" type="data" label="Select data" help=""/>
+	<param format="lefse_internal_res" name="inp_data" type="data" label="Select data" help=""/>
 
 	<conditional name="textm">
                 <param name="text_choice" type="select" label="Set text and label options (font size, abbreviations, ...)" help="">

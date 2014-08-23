@@ -3,8 +3,8 @@
 <command interpreter="python">plot_features.py  $inp_data $inp_res $arch --title_font_size $graphical.title_font_size --background_color $graphical.background_color --class_label_pos $graphical.class_label_pos --class_font_size $graphical.class_font_size --top $graphical.top --bot $graphical.bot --font_size $graphical.font_size --width $graphical.width --height $graphical.height -f $feature_set  --archive "zip" --format $for --dpi $dpi --subcl_mean $graphical.subcl_mean --subcl_median $graphical.subcl_median </command>  
   <inputs>
     <page>
-	<param format="lefse" name="inp_data" type="data" label="The formatted datasets" help=""/>
-	<param format="lefse_res" name="inp_res" type="data" label="The LEfSe output" help=""/>
+	<param format="lefse_internal_for" name="inp_data" type="data" label="The formatted datasets" help=""/>
+	<param format="lefse_internal_res" name="inp_res" type="data" label="The LEfSe output" help=""/>
 
 	<param name="feature_set" type="select" label="Do you want to plot all features or only those detected as biomarkers?">
 		<option value="diff" selected="diff">Biomarkers only</option>

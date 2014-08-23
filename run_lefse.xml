@@ -4,7 +4,7 @@
 <command interpreter="python">run_lefse.py $inp_data $output -l $lda_th -a $kw_alpha -w $w_alpha -e $w_pol -y $multiclass -f 0.9</command> 
   <inputs>
     <page>
-	<param format="lefse" name="inp_data" type="data" label="Select data" help=""/>
+	<param format="lefse_internal_for" name="inp_data" type="data" label="Select data" help=""/>
 	<param name="kw_alpha" type="float" size="2" value="0.05" label="Alpha value for the factorial Kruskal-Wallis test among classes"/>
 	<param name="w_alpha" type="float" size="2" value="0.05" label="Alpha value for the pairwise Wilcoxon test between subclasses"/>
 	<param name="lda_th" type="float" size="2" value="2.0" label="Threshold on the logarithmic LDA score for discriminative features"/>
@@ -24,7 +24,7 @@
     </page>
    </inputs>
   <outputs>
-    <data format="lefse_res" name="output" />
+    <data format="lefse_internal_res" name="output" />
   </outputs>
   <tests>
     <test>

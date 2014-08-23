@@ -3,7 +3,7 @@
 <command interpreter="python">plot_cladogram.py $inp_data $cladogram --title "$textm.title" --expand_void_lev $structural.expand_void_lev --max_lev $structural.max_lev --colored_label $graphical.colored_labels --labeled_start_lev $textm.labeled_start_lev --labeled_stop_lev $textm.labeled_stop_lev --abrv_start_lev $textm.abrv_start_lev --abrv_stop_lev $textm.abrv_stop_lev --radial_start_lev $graphical.radial_start_lev  --max_point_size $graphical.max_point_size  --min_point_size $graphical.min_point_size  --point_edge_width $graphical.point_edge_width  --siblings_connector_width $graphical.siblings_connector_width --parents_connector_width $graphical.parents_connector_width  --alpha $graphical.alpha  --clade_sep $graphical.clade_sep --title_font_size $textm.title_font_size --label_font_size $textm.label_font_size --class_legend_font_size $textm.class_legend_font_size --sub_clade "$structural.root" --background_color $graphical.background_color --format $for --right_space_prop $graphical.right_space_prop --left_space_prop 0.01 --dpi $dpi</command> 
   <inputs>
     <page>
-	<param format="lefse_res" name="inp_data" type="data" label="Select data" help=""/>
+	<param format="lefse_internal_res" name="inp_data" type="data" label="Select data" help=""/>
 		
 	<conditional name="structural">
 		<param name="structural_choice" type="select" label="Set structural parameters of the cladogram" help="">
