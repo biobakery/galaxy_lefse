@@ -1,8 +1,8 @@
-#Installation instructions for lefse in a galaxy environment.
+# Installation instructions for lefse in a galaxy environment.
 
 For general information about lefse please go to:
 ```
-https://bitbucket.org/biobakery/biobakery/wiki/lefse
+https://github.com/biobakery/biobakery/wiki/lefse
 ```
 Installation instructions for lefse in a galaxy environment.
 
